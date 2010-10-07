@@ -1,0 +1,7 @@
+<h1>Hello World!</h1>
+
+{% for post in recent_posts %}
+    <p><a href="{{ post.get_absolute_url }}">{{ post }}</a></p>
+    <p>{{ post.body_html|safe }}</p>
+    <p>{{ post.publish_date }}</p>
+{% endfor %}

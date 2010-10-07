@@ -5,6 +5,7 @@ unittest). These will both pass when you run "manage.py test".
 Replace these with more appropriate tests for your application.
 """
 
+import datetime
 from mock import Mock, patch
 
 from django import test
@@ -53,6 +54,13 @@ class PostModelTests(test.TestCase):
         posts = models.Post.get_recent_posts(limit=2)
         self.assertEqual(posts, [1, 2])
 
+    def should_get_absolute_url(self):
+        post = models.Post(publish_date=datetime.date(2010,10,5), slug="post-title")
+        self.assertEqual(post.get_absolute_url(), reverse("blog:details", kwargs={
+            'year': 2010,
+            'month': '10',
+            'slug': 'post-title',
+        }))
 
 class Acceptance(test.TestCase):
 
@@ -62,4 +70,19 @@ class Acceptance(test.TestCase):
     def should_hit_index_page(self):
         response = self.client.get(reverse("blog:index"))
         self.assertEqual(response.status_code, 200)
+
+    def should_hit_blog_detail_page(self):
+        response = self.client.get(reverse("blog:details", kwargs={
+            'year': '2010', 'month': '05',
+            'slug': 'this-post'}))
+        self.assertEqual(response.status_code, 200)
+
+class BlogIndexTests(test.TestCase):
+    def setUp(self):
+        self.client = test.Client()
+
+    @patch.object(models.Post, 'get_recent_posts', Mock(return_value=["Post 1", "Post 2"]))
+    def should_send_recent_posts_to_template(self):
+        response = self.client.get(reverse("blog:index"))
+        self.assertEqual(response.context['recent_posts'], ["Post 1", "Post 2"])
 
