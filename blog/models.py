@@ -27,3 +27,7 @@ class Post(models.Model):
         self.slug = slugify(self.title)
         self.body_html = markdown.markdown(self.body_text)
         super(Post, self).save(*args, **kwargs)
+
+    @staticmethod
+    def get_recent_posts(limit=5):
+        return Post.objects.filter(active=True)[:limit]
