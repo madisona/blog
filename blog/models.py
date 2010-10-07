@@ -41,5 +41,6 @@ class Post(models.Model):
         return ("blog:details", None, {
             'year': self.publish_date.year,
             'month': self.publish_date.strftime('%m'),
+            'day': self.publish_date.strftime('%d'),
             'slug': self.slug,
         })

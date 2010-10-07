@@ -59,6 +59,7 @@ class PostModelTests(test.TestCase):
         self.assertEqual(post.get_absolute_url(), reverse("blog:details", kwargs={
             'year': 2010,
             'month': '10',
+            'day': '05',
             'slug': 'post-title',
         }))
 
@@ -71,11 +72,6 @@ class Acceptance(test.TestCase):
         response = self.client.get(reverse("blog:index"))
         self.assertEqual(response.status_code, 200)
 
-    def should_hit_blog_detail_page(self):
-        response = self.client.get(reverse("blog:details", kwargs={
-            'year': '2010', 'month': '05',
-            'slug': 'this-post'}))
-        self.assertEqual(response.status_code, 200)
 
 class BlogIndexTests(test.TestCase):
     def setUp(self):
@@ -85,4 +81,26 @@ class BlogIndexTests(test.TestCase):
     def should_send_recent_posts_to_template(self):
         response = self.client.get(reverse("blog:index"))
         self.assertEqual(response.context['recent_posts'], ["Post 1", "Post 2"])
+
+class DetailsPageTests(test.TestCase):
+    # should post comment
+    # should see comments
+    def should_get_404_if_post_not_found(self):
+        response = self.client.get(reverse("blog:details", kwargs={
+            'slug': 'post-1', 'year': '2010', 'month': "10", 'day': '06',
+        }))
+        self.assertEqual(response.status_code, 404)
+
+    def should_hit_detail_page(self):
+        user = User.objects.create(username="aaron")
+        models.Post.objects.create(
+                title="Test Post",
+                author=user,
+                body_text="Post body.",
+                publish_date=datetime.date(2010,10,6)
+            )
+        response = self.client.get(reverse("blog:details", kwargs={
+            'slug': 'test-post', 'year': '2010', 'month': "10", 'day': '06',
+        }))
+        self.assertEqual(response.status_code, 200)
 
