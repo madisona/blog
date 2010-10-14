@@ -2,3 +2,9 @@
 *.pyo
 .idea*
 mysite_db
+# leave out buildout stuff...
+.installed.cfg
+src/django_blog.egg-info
+bin/*
+parts/*
+develop-eggs/*

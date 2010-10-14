@@ -28,7 +28,7 @@ class MarkDownInput(forms.Textarea):
         return mark_safe(u'\n'.join(html))
 
     def _media(self):
-        return forms.Media(css= {'screen': settings.MEDIA_URL + "wmd/wmd.css"},
+        return forms.Media(css= {'screen': [settings.MEDIA_URL + "wmd/wmd.css"]},
                            js=(settings.MEDIA_URL + "wmd/showdown.js",
                                settings.MEDIA_URL + "wmd/wmd.js"))
 
@@ -43,7 +43,7 @@ class AdminMarkDownInput(admin_widgets.AdminTextareaWidget, MarkDownInput):
         attrs['id'] = 'wmd-input'
         final_attrs = self.build_attrs(attrs, name=name)
 
-        html = [u'<div class="wmd-panel"><div id="wmd-button-bar"></div><textarea%s>%s</textarea></div>' % \
+        html = [u'<div class="wmd-panel wmd-admin"><div id="wmd-button-bar"></div><textarea%s>%s</textarea></div>' % \
                 (flatatt(final_attrs), force_unicode(escape(value)))]
 
         if wmd_settings.WMD_ADMIN_SHOW_PREVIEW:

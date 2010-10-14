@@ -9,6 +9,8 @@ body {
 	min-width: 500px;
 }
 
+.wmd-admin {margin-left: 10em;}
+
 #wmd-editor {
 	background-color: none;
 }
