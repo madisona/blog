@@ -7,4 +7,5 @@ mysite_db
 src/*.egg-info
 bin/*
 parts/*
+eggs/*
 develop-eggs/*
